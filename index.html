@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book API Manager</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+        input {
+            margin: 5px;
+            padding: 8px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+        #output {
+            margin-top: 20px;
+            background: #f2f2f2;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+   <h2>📚 Book API Manager</h2>
+   <input type="text" id="id" placeholder="Book ID">
+   <input type="text" id="title" placeholder="Title">
+   <input type="text" id="author" placeholder="Author">
+   <br>
+   <button onclick="getBooks()">GET Books</button>
+   <button onclick="addBook()">POST Book</button>
+   <button onclick="updateBook()">PUT Book</button>
+   <button onclick="deleteBook()">DELETE Book</button>
+
+   <div id="output"></div>
+   <script>
+    const baseURL = "http://localhost:3000/books";
+    function show(data) {
+        document.getElementById("output").innerText =
+        JSON.stringify(data, null, 2);
+   }
+   async function getBooks() {
+     const res = await fetch(baseURL);
+     const data = await res.json();
+     show(data);
+   }
+    async function addBook() {
+     const title = document.getElementById("title").value;
+     const author = document.getElementById("author").value;
+     const res = await fetch(baseURL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, author })
+    }
+);
+    const data = await res.json();
+    show(data);
+    }
+    async function updateBook() {
+      const id = document.getElementById("id").value;
+      const title = document.getElementById("title").value;
+      const author = document.getElementById("author").value;
+      const res = await fetch(`${baseURL}/${id}`, {
+         method: "PUT",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify({ title, author })
+        }
+    );
+    const data = await res.json();
+    show(data);
+   }
+     async function deleteBook() {
+       const id = document.getElementById("id").value;
+       const res = await fetch(`${baseURL}/${id}`, {
+          method: "DELETE"
+       }
+    );
+
+    const data = await res.json();
+    show(data);
+}
+</script>
+</body>
+</html>
